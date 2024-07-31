@@ -11,7 +11,7 @@ func adjust_reticle_lines():
 	var velocity = PLAYER_CONTROLLER.get_real_velocity()
 	var origin = Vector3(0, 0, 0)
 	var pos = Vector2(0, 0)
-	var speed = origin.distance_to(velocity)
+	var speed = min(15.0, origin.distance_to(velocity))
 	print("speed: ", speed)
 	
 	RETICLE_LINES[0].position = lerp(RETICLE_LINES[0].position, pos + Vector2(-speed * RETICLE_DISTANCE, 0), RETICLE_SPEED)
