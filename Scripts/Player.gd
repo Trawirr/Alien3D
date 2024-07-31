@@ -51,7 +51,6 @@ func toggle_crouch():
 		ANIMATION_PLAYER.play("crouch", -1, CROUCH_ANIMATION_SPEED)
 	elif CROUCH_SHAPECAST.is_colliding() == false:
 		ANIMATION_PLAYER.play("crouch", -1, -CROUCH_ANIMATION_SPEED, true)
-	print("crouching: ", _is_crouching, ", colliding: ", CROUCH_SHAPECAST.is_colliding())
 
 func _update_camera(delta):
 	_mouse_rotation.x += _tilt_input * delta
@@ -100,7 +99,6 @@ func _physics_process(delta):
 	_update_camera(delta)
 		
 	# Handle jump
-	print("is crouching: ", _is_crouching)
 	if Input.is_action_just_pressed("jump") and is_on_floor() and !_is_crouching:
 		print("jump")
 		velocity.y = JUMP_VELOCITY
@@ -108,7 +106,6 @@ func _physics_process(delta):
 	# Handle sprint
 	
 	if Input.is_action_pressed("sprint") and is_on_floor():
-		print("sprint")
 		set_movement_speed("sprint")
 	else:
 		set_movement_speed("walk")
