@@ -4,6 +4,18 @@ extends PanelContainer
 var property
 var fps : String
 
+func add_property(title : String, value, order):
+	var target
+	target = property_container.find_child(title, true, false)
+	if !target:
+		target = Label.new()
+		property_container.add_child(target)
+		target.name = title
+		target.text = target.name + ": " + str(value)
+	elif visible:
+		target.text = title + ": " + str(value)
+		property_container.move_child(target, order)
+
 func add_debug_property(title : String, value):
 	property = Label.new()
 	property_container.add_child(property)
@@ -16,6 +28,7 @@ func _input(event):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	Global.debug = self
 	visible = false
 	add_debug_property("FPS", fps )
 

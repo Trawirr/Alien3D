@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://cty3v6wadln4l"]
+[gd_scene load_steps=12 format=3 uid="uid://cty3v6wadln4l"]
 
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="1_8myxh"]
 [ext_resource type="Script" path="res://Scripts/reticle.gd" id="2_0ron4"]
+[ext_resource type="Theme" uid="uid://c8xejel8kjyj" path="res://Themes/debug_theme.tres" id="3_d0quj"]
+[ext_resource type="Script" path="res://Scripts/debug.gd" id="4_xqbxn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kdhga"]
 
@@ -136,7 +138,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Reticle" type="CenterContainer" parent="UI"]
+[node name="Reticle" type="CenterContainer" parent="UI" node_paths=PackedStringArray("RETICLE_LINES", "PLAYER_CONTROLLER")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -150,6 +152,9 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_0ron4")
+RETICLE_LINES = [NodePath("Left"), NodePath("Right"), NodePath("Up"), NodePath("Down")]
+PLAYER_CONTROLLER = NodePath("../..")
+RETICLE_SPEED = 0.15
 
 [node name="Left" type="Line2D" parent="UI/Reticle"]
 points = PackedVector2Array(-5, 0, -15, 0)
@@ -166,5 +171,21 @@ width = 2.0
 [node name="Down" type="Line2D" parent="UI/Reticle"]
 points = PackedVector2Array(0, 5, 0, 15)
 width = 2.0
+
+[node name="DebugPanel" type="PanelContainer" parent="UI"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 50.0
+offset_bottom = 50.0
+theme = ExtResource("3_d0quj")
+script = ExtResource("4_xqbxn")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/DebugPanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/DebugPanel/MarginContainer"]
+layout_mode = 2
 
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_animation_player_animation_started"]

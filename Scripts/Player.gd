@@ -90,6 +90,8 @@ func _unhandled_input(event):
 		_tilt_input = -event.relative.y * SENSITIVITY
 
 func _physics_process(delta):
+	Global.debug.add_property("Movement speed", _speed, 1)
+	
 	# Add the gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
