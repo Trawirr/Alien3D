@@ -8,6 +8,8 @@ var _speed
 @export var JUMP_VELOCITY : float = 4.5
 @export var _is_crouching : bool = false
 @export_range(5, 10, 0.1) var CROUCH_ANIMATION_SPEED : float = 7.0
+@export var ACCELERATION : float = 0.1
+@export var DEACCELERATION : float = 0.25
 
 # mouse movement
 var _mouse_input : bool = false
@@ -69,6 +71,8 @@ func _update_camera(delta):
 	_tilt_input = 0.0
 
 func _ready():
+	Global.player = self
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	set_movement_speed("walk")

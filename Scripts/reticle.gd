@@ -12,7 +12,6 @@ func adjust_reticle_lines():
 	var origin = Vector3(0, 0, 0)
 	var pos = Vector2(0, 0)
 	var speed = min(15.0, origin.distance_to(velocity))
-	print("speed: ", speed)
 	
 	RETICLE_LINES[0].position = lerp(RETICLE_LINES[0].position, pos + Vector2(-speed * RETICLE_DISTANCE, 0), RETICLE_SPEED)
 	RETICLE_LINES[1].position = lerp(RETICLE_LINES[1].position, pos + Vector2(speed * RETICLE_DISTANCE, 0), RETICLE_SPEED)
