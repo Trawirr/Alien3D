@@ -8,8 +8,8 @@ var _speed
 @export var JUMP_VELOCITY : float = 4.5
 @export var _is_crouching : bool = false
 @export_range(5, 10, 0.1) var CROUCH_ANIMATION_SPEED : float = 7.0
-@export var ACCELERATION : float = 0.1
-@export var DEACCELERATION : float = 0.25
+@export var ACCELERATION : float = 0.2
+@export var DECELERATION : float = 0.4
 
 # mouse movement
 var _mouse_input : bool = false
@@ -111,10 +111,10 @@ func _physics_process(delta):
 		
 	# Handle sprint
 	
-	if Input.is_action_pressed("sprint") and is_on_floor():
-		set_movement_speed("sprint")
-	else:
-		set_movement_speed("walk")
+	#if Input.is_action_pressed("sprint") and is_on_floor():
+		#set_movement_speed("sprint")
+	#else:
+		#set_movement_speed("walk")
 		
 	# Get the input direction and handle the movement/acceleration
 	# As good practice, you should replace UI actions with custom gameplay actions
@@ -124,18 +124,18 @@ func _physics_process(delta):
 	
 	if is_on_floor():
 		if direction:
-			velocity.x = direction.x * _speed
-			velocity.z = direction.z * _speed
+			velocity.x = lerp(velocity.x, direction.x * _speed, ACCELERATION)
+			velocity.z = lerp(velocity.z, direction.z * _speed, ACCELERATION)
 		else:
-			velocity.x = 0.0
-			velocity.z = 0.0
+			velocity.x = move_toward(velocity.x, 0, DECELERATION)
+			velocity.z = move_toward(velocity.z, 0, DECELERATION)
 	else:
 		velocity.x = lerp(velocity.x, direction.x * _speed, delta * 2.0)
 		velocity.z = lerp(velocity.z, direction.z * _speed, delta * 2.0)
 		
 	# head bobbing
-	t_bob += delta * velocity.length() * float(is_on_floor())
-	CAMERA.transform.origin = _headbob(t_bob)
+	#t_bob += delta * velocity.length() * float(is_on_floor())
+	#CAMERA.transform.origin = _headbob(t_bob)
 	#print(t_bob, " ", CAMERA.transform.origin)
 	
 	# FOV

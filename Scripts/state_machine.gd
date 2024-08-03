@@ -25,7 +25,7 @@ func _physics_process(delta):
 	CURRENT_STATE.physics_update(delta)
 	
 func on_child_transition(new_state_name: StringName) -> void:
-	print("transition: ", new_state_name)
+	print("State machine / transition: ", new_state_name)
 	var new_state = states.get(new_state_name)
 	if new_state != null:
 		if new_state != CURRENT_STATE:
