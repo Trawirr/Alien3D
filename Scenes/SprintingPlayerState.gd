@@ -1,23 +1,28 @@
 class_name SprintingPlayerState
 
-extends State
+extends PlayerMovementState
 
-@export var ANIMATION: AnimationPlayer
+@export var SPEED: float = 7.0
+@export var ACCELERATION: float = 0.2
+@export var DECELERATION: float = 0.4
 @export var TOP_ANIM_SPEED: float = 4.0
 
 func set_animation_speed(speed):
-	print(speed, " | ", 0.0, " | ", Global.player.SPRINT_SPEED, " | ", 0.0, " | ", 1.0)
-	var alpha = remap(speed, 0.0, Global.player.SPRINT_SPEED, 0.0, 1.0)
+	print(speed, " | ", 0.0, " | ", PLAYER.SPRINT_SPEED, " | ", 0.0, " | ", 1.0)
+	var alpha = remap(speed, 0.0, PLAYER.SPRINT_SPEED, 0.0, 1.0)
 	ANIMATION.speed_scale = lerp(0.0, TOP_ANIM_SPEED, alpha)
 	print("sprinting animation speed: ", ANIMATION.speed_scale, ", alpha: ", alpha)
 
-func _input(event) -> void:
-	if event.is_action_released("sprint"):
-		transition.emit("WalkingPlayerState")
-
 func enter() -> void:
 	ANIMATION.play("sprinting", 0.5, 1.0)
-	Global.player._speed = Global.player.SPRINT_SPEED
+	PLAYER._speed = PLAYER.SPRINT_SPEED
 
 func update(delta):
-	set_animation_speed(Global.player.velocity.length())
+	PLAYER.update_gravity(delta)
+	PLAYER.update_input(SPEED, ACCELERATION, DECELERATION)
+	PLAYER.update_velocity()
+	
+	set_animation_speed(PLAYER.velocity.length())
+	
+	if Input.is_action_just_released("sprint"):
+		transition.emit("WalkingPlayerState")

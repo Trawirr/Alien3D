@@ -1,13 +1,11 @@
-extends CharacterBody3D
+class_name Player extends CharacterBody3D
 
 # movement vars
 var _speed
 @export var CROUCH_SPEED : float = 2.0
-@export var WALK_SPEED : float = 5.0
-@export var SPRINT_SPEED : float = 12.0
+@export var WALK_SPEED : float = 4.0
+@export var SPRINT_SPEED : float = 7.0
 @export var JUMP_VELOCITY : float = 4.5
-@export var _is_crouching : bool = false
-@export_range(5, 10, 0.1) var CROUCH_ANIMATION_SPEED : float = 7.0
 @export var ACCELERATION : float = 0.2
 @export var DECELERATION : float = 0.4
 
@@ -47,14 +45,29 @@ func set_movement_speed(state : String):
 			_speed = CROUCH_SPEED
 		"sprint":
 			_speed = SPRINT_SPEED
+			
+func update_gravity(delta: float) -> void:
+	velocity.y -= gravity * delta
+	
+func update_input(speed: float, acceleration: float, deceleration: float) -> void:
+	var input_dir = Input.get_vector("left", "right", "up", "down")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	#if is_on_floor():
+	if direction:
+		velocity.x = lerp(velocity.x, direction.x * _speed, acceleration)
+		velocity.z = lerp(velocity.z, direction.z * _speed, acceleration)
+	else:
+		velocity.x = move_toward(velocity.x, 0, deceleration)
+		velocity.z = move_toward(velocity.z, 0, deceleration)
+	#else:
+		#velocity.x = lerp(velocity.x, direction.x * _speed, delta * 2.0)
+		#velocity.z = lerp(velocity.z, direction.z * _speed, delta * 2.0)
+	
+func update_velocity() -> void:
+	move_and_slide()
 
-func toggle_crouch():
-	if !_is_crouching:
-		ANIMATION_PLAYER.play("crouch", -1, CROUCH_ANIMATION_SPEED)
-	elif CROUCH_SHAPECAST.is_colliding() == false:
-		ANIMATION_PLAYER.play("crouch", -1, -CROUCH_ANIMATION_SPEED, true)
-
-func _update_camera(delta):
+func _update_camera(delta: float) -> void:
 	_mouse_rotation.x += _tilt_input * delta
 	_mouse_rotation.x = clamp(_mouse_rotation.x, TILT_LOWER_LIMIT, TILT_UPPER_LIMIT)
 	_mouse_rotation.y += _rotation_input * delta
@@ -82,10 +95,6 @@ func _ready():
 func _input(event):
 	if event.is_action_pressed("exit"):
 		get_tree().quit()
-	if event.is_action_pressed("crouch") and is_on_floor():
-		toggle_crouch()
-	if event.is_action_released("crouch") and is_on_floor():
-		toggle_crouch()
 	
 func _unhandled_input(event):
 	_mouse_input = event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED
@@ -95,48 +104,10 @@ func _unhandled_input(event):
 
 func _physics_process(delta):
 	Global.debug.add_property("Movement speed", _speed, 1)
+	Global.debug.add_property("Velocity", "%.2f" % velocity.length(), 2)
 	
-	# Add the gravity
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-		#print("gravity: ", velocity.y, ", delta: ", delta)
-		
 	# Camera rotation
 	_update_camera(delta)
-		
-	# Handle jump
-	if Input.is_action_just_pressed("jump") and is_on_floor() and !_is_crouching:
-		print("jump")
-		velocity.y = JUMP_VELOCITY
-		
-	# Handle sprint
-	
-	#if Input.is_action_pressed("sprint") and is_on_floor():
-		#set_movement_speed("sprint")
-	#else:
-		#set_movement_speed("walk")
-		
-	# Get the input direction and handle the movement/acceleration
-	# As good practice, you should replace UI actions with custom gameplay actions
-	var input_dir = Input.get_vector("left", "right", "up", "down")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	#print("direciton: ", direction)
-	
-	if is_on_floor():
-		if direction:
-			velocity.x = lerp(velocity.x, direction.x * _speed, ACCELERATION)
-			velocity.z = lerp(velocity.z, direction.z * _speed, ACCELERATION)
-		else:
-			velocity.x = move_toward(velocity.x, 0, DECELERATION)
-			velocity.z = move_toward(velocity.z, 0, DECELERATION)
-	else:
-		velocity.x = lerp(velocity.x, direction.x * _speed, delta * 2.0)
-		velocity.z = lerp(velocity.z, direction.z * _speed, delta * 2.0)
-		
-	# head bobbing
-	#t_bob += delta * velocity.length() * float(is_on_floor())
-	#CAMERA.transform.origin = _headbob(t_bob)
-	#print(t_bob, " ", CAMERA.transform.origin)
 	
 	# FOV
 	var velocity_clamped = clamp(velocity.length(), 0.5, SPRINT_SPEED * 2)
@@ -144,18 +115,3 @@ func _physics_process(delta):
 	CAMERA.fov = lerp(CAMERA.fov, target_fov, delta * 10.0)
 	
 	move_and_slide()
-
-
-func _headbob(time) -> Vector3:
-	var pos = Vector3.ZERO
-	pos.y = sin(time * BOB_FREQUENCY) * BOB_AMPLITUDE
-	pos.x = cos(time * BOB_FREQUENCY / 2) * BOB_AMPLITUDE
-	return pos
-
-func _on_animation_player_animation_started(anim_name):
-	if anim_name == "crouch":
-		_is_crouching = !_is_crouching
-		if _is_crouching:
-			set_movement_speed("crouch")
-		else:
-			set_movement_speed("walk")
