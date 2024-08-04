@@ -6,7 +6,7 @@ extends PlayerMovementState
 @export var ACCELERATION: float = 0.2
 @export var DECELERATION: float = 0.4
 
-func enter() -> void:
+func enter(previous_state) -> void:
 	ANIMATION.pause()
 
 func update(delta):
@@ -16,3 +16,6 @@ func update(delta):
 	
 	if PLAYER.velocity.length() > 0.0 and PLAYER.is_on_floor():
 		transition.emit("WalkingPlayerState")
+		
+	if Input.is_action_just_pressed("crouch") and PLAYER.is_on_floor():
+		transition.emit("CrouchingPlayerState")

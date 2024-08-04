@@ -16,6 +16,7 @@ var _rotation_input : float
 var _tilt_input: float
 var _player_rotation: Vector3
 var _camera_rotation: Vector3
+var _current_rotation: float
 @export var TILT_LOWER_LIMIT = deg_to_rad(-90)
 @export var TILT_UPPER_LIMIT = deg_to_rad(90)
 @export var SENSITIVITY = 0.5;
@@ -68,6 +69,7 @@ func update_velocity() -> void:
 	move_and_slide()
 
 func _update_camera(delta: float) -> void:
+	_current_rotation = _rotation_input
 	_mouse_rotation.x += _tilt_input * delta
 	_mouse_rotation.x = clamp(_mouse_rotation.x, TILT_LOWER_LIMIT, TILT_UPPER_LIMIT)
 	_mouse_rotation.y += _rotation_input * delta

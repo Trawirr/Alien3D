@@ -15,9 +15,12 @@ func _input(event):
 	if event.is_action_pressed("sprint") and PLAYER.is_on_floor():
 		transition.emit("SprintingPlayerState")
 
-func enter() -> void:
+func enter(previous_state) -> void:
 	ANIMATION.play("walking", -1.0, 1.0)
 	PLAYER._speed = PLAYER.WALK_SPEED
+	
+func exit() -> void:
+	ANIMATION.speed_scale = 1.0
 
 func update(delta):
 	PLAYER.update_gravity(delta)
@@ -27,3 +30,6 @@ func update(delta):
 	set_animation_speed(PLAYER.velocity.length())
 	if PLAYER.velocity.length() == 0.0:
 		transition.emit("IdlePlayerState")
+		
+	if Input.is_action_just_pressed("crouch") and PLAYER.is_on_floor():
+		transition.emit("CrouchingPlayerState")
