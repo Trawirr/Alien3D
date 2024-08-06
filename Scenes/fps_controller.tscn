@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cty3v6wadln4l"]
+[gd_scene load_steps=22 format=3 uid="uid://cty3v6wadln4l"]
 
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="1_8myxh"]
 [ext_resource type="Script" path="res://Scripts/reticle.gd" id="2_0ron4"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://Scenes/SprintingPlayerState.gd" id="8_pae2s"]
 [ext_resource type="Script" path="res://Scenes/CrouchingPlayerState.gd" id="9_v5cdo"]
 [ext_resource type="Script" path="res://Scenes/SlidingPlayerState.gd" id="10_joo7k"]
+[ext_resource type="Script" path="res://Scenes/JumpingPlayerState.gd" id="11_bvdxv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kdhga"]
 
@@ -451,5 +452,8 @@ script = ExtResource("9_v5cdo")
 [node name="SlidingPlayerState" type="Node" parent="PlayerStateMachine"]
 script = ExtResource("10_joo7k")
 SPEED = null
+
+[node name="JumpingPlayerState" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("11_bvdxv")
 
 [connection signal="animation_started" from="AnimationPlayer" to="." method="_on_animation_player_animation_started"]
