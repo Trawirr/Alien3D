@@ -12,8 +12,7 @@ func set_animation_speed(speed):
 	ANIMATION.speed_scale = lerp(0.0, TOP_ANIM_SPEED, alpha)
 
 func _input(event):
-	if event.is_action_pressed("sprint") and PLAYER.is_on_floor():
-		transition.emit("SprintingPlayerState")
+	pass
 
 func enter(previous_state) -> void:
 	ANIMATION.play("walking", -1.0, 1.0)
@@ -30,6 +29,9 @@ func update(delta):
 	set_animation_speed(PLAYER.velocity.length())
 	if PLAYER.velocity.length() == 0.0:
 		transition.emit("IdlePlayerState")
+		
+	if Input.is_action_pressed("sprint") and PLAYER.is_on_floor():
+		transition.emit("SprintingPlayerState")
 		
 	if Input.is_action_just_pressed("crouch") and PLAYER.is_on_floor():
 		transition.emit("CrouchingPlayerState")

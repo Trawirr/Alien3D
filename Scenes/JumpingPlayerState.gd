@@ -4,7 +4,7 @@ class_name JumpingPlayerState extends PlayerMovementState
 @export var ACCELERATION: float = 0.1
 @export var DECELERATION: float = 0.25
 @export var JUMP_VELOCITY: float = 4.5
-@export_range(0.5, 1.0, 0.01) var INPUT_MULTIPLIER: float = 0.25
+@export_range(0.5, 1.0, 0.01) var INPUT_MULTIPLIER: float = 0.05
 
 func enter(previous_state) -> void:
 	PLAYER.velocity.y += JUMP_VELOCITY
