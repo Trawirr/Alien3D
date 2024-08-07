@@ -15,8 +15,11 @@ func _input(event):
 	pass
 
 func enter(previous_state) -> void:
-	ANIMATION.play("walking", -1.0, 1.0)
-	PLAYER._speed = PLAYER.WALK_SPEED
+	if ANIMATION.is_playing() and ANIMATION.current_animation == "jump_end":
+		await ANIMATION.animation_finished
+		ANIMATION.play("walking", -1.0, 1.0)
+	else:
+		ANIMATION.play("walking", -1.0, 1.0)
 	
 func exit() -> void:
 	ANIMATION.speed_scale = 1.0

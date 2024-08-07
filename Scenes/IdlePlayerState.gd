@@ -7,7 +7,11 @@ extends PlayerMovementState
 @export var DECELERATION: float = 0.4
 
 func enter(previous_state) -> void:
-	ANIMATION.pause()
+	if ANIMATION.is_playing() and ANIMATION.current_animation == "jump_end":
+		await ANIMATION.animation_finished
+		ANIMATION.pause()
+	else:
+		ANIMATION.pause()
 
 func update(delta):
 	PLAYER.update_gravity(delta)

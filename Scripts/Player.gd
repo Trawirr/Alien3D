@@ -77,8 +77,8 @@ func _update_camera(delta: float) -> void:
 	_player_rotation = Vector3(0.0, _mouse_rotation.y, 0.0)
 	_camera_rotation = Vector3(_mouse_rotation.x, 0.0, 0.0)
 	
-	CAMERA_CONTROLLER.transform.basis = Basis.from_euler(_camera_rotation)
-	CAMERA_CONTROLLER.rotation.z = 0.0
+	CAMERA.transform.basis = Basis.from_euler(_camera_rotation)
+	CAMERA.rotation.z = 0.0
 	
 	global_transform.basis = Basis.from_euler(_player_rotation)
 	
