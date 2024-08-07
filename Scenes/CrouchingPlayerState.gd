@@ -44,3 +44,6 @@ func update(delta) -> void:
 	elif !Input.is_action_pressed("crouch") and !RELEASED:
 		RELEASED = true
 		uncrouch()
+		
+	if PLAYER.velocity.y < 0.0 and !PLAYER.is_on_floor():
+		transition.emit("FallingPlayerState")

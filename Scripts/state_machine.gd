@@ -19,10 +19,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	print("state machine _processing")
 	CURRENT_STATE.update(delta)
 	Global.debug.add_property("Current state", CURRENT_STATE.name, 1)
-	print("Current state ", CURRENT_STATE.name, 1)
 	
 func _physics_process(delta):
 	CURRENT_STATE.physics_update(delta)
